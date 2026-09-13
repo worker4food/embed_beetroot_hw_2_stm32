@@ -46,7 +46,8 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+#define DEBOUNCE_DELAY_MS 50
+#define BLINK_DELAY_MS 100
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -57,6 +58,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED_Pin GPIO_PIN_13
+#define LED_GPIO_Port GPIOC
+#define BTN_Pin GPIO_PIN_5
+#define BTN_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 

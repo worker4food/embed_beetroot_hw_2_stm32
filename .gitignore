@@ -30,4 +30,4 @@ Thumbs.db
 .mxproject
 CMakeCache.txt
 CMakeFiles/
-CMakeUserPresets.json
+.clangd
