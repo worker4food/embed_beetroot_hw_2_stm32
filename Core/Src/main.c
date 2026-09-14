@@ -22,7 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdint.h>
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -88,30 +89,29 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  int btn_stable = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5);
-  uint32_t wait_till_ms = HAL_GetTick();
+  GPIO_PinState btn_stable = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5);
+  uint32_t debounce_till_ms = HAL_GetTick();
+  uint32_t last_toggle_ms = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    int btn_curr = HAL_GPIO_ReadPin(BTN_GPIO_Port, BTN_Pin);
+    GPIO_PinState btn_curr = HAL_GPIO_ReadPin(BTN_GPIO_Port, BTN_Pin);
     uint32_t current_ms = HAL_GetTick();
 
-    if (wait_till_ms > current_ms) {
-      continue;
-    } else {
+
+    if (current_ms >= debounce_till_ms) {
       btn_stable = btn_curr;
-      wait_till_ms = 0;
+      debounce_till_ms = current_ms + DEBOUNCE_DELAY_MS;
     }
 
-    if (btn_stable != btn_curr) {
-      wait_till_ms = current_ms + DEBOUNCE_DELAY_MS;
-    } else if (wait_till_ms == 0) {
-      HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, btn_curr);
+    bool is_blinking = btn_stable == GPIO_PIN_RESET;
+    if (is_blinking && current_ms - last_toggle_ms > BLINK_DELAY_MS) {
+      HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+      last_toggle_ms = current_ms;
     }
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
