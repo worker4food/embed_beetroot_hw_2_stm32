@@ -101,15 +101,17 @@ int main(void)
     GPIO_PinState btn_curr = HAL_GPIO_ReadPin(BTN_GPIO_Port, BTN_Pin);
     uint32_t current_ms = HAL_GetTick();
 
-
     if (current_ms >= debounce_till_ms) {
       btn_stable = btn_curr;
       debounce_till_ms = current_ms + DEBOUNCE_DELAY_MS;
     }
 
-    bool is_blinking = btn_stable == GPIO_PIN_RESET;
-    if (is_blinking && current_ms - last_toggle_ms > BLINK_DELAY_MS) {
-      HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+    if (current_ms - last_toggle_ms > BLINK_DELAY_MS) {
+      if (btn_stable == GPIO_PIN_RESET) { // blink
+        HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+      } else { // turn off
+        HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+      }
       last_toggle_ms = current_ms;
     }
     /* USER CODE END WHILE */
