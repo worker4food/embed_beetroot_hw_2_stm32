@@ -46,8 +46,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define DEBOUNCE_DELAY_MS 50
-#define BLINK_DELAY_MS 100
+
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

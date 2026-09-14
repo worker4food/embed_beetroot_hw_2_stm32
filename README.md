@@ -32,10 +32,10 @@ arm-none-eabi-gcc (GNU Tools for STM32 14.3.rel1.20251027-0700) 14.3.1 20250623
 
 ```sh
 cmake --preset Debug
-ninja -C build/Debug
+cmake --build --preset Debug
 ```
 
-Use `cmake --preset Release` / `ninja -C build/Release` for a release build.
+Substitute `Release` for `Debug` above for a release build.
 
 ## Flash
 

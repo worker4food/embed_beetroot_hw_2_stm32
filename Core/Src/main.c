@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "app_loop.h"
 #include "stm32f4xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -89,31 +90,19 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  GPIO_PinState btn_stable = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5);
-  uint32_t debounce_till_ms = HAL_GetTick();
-  uint32_t last_toggle_ms = 0;
+  app_state_t st;
+  app_setup(
+    (pin_config_t){ .port = LED_GPIO_Port, .pin = LED_Pin },
+    (pin_config_t){ .port = BTN_GPIO_Port, .pin = BTN_Pin },
+    &st
+  );
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    GPIO_PinState btn_curr = HAL_GPIO_ReadPin(BTN_GPIO_Port, BTN_Pin);
-    uint32_t current_ms = HAL_GetTick();
-
-    if (current_ms >= debounce_till_ms) {
-      btn_stable = btn_curr;
-      debounce_till_ms = current_ms + DEBOUNCE_DELAY_MS;
-    }
-
-    if (current_ms - last_toggle_ms > BLINK_DELAY_MS) {
-      if (btn_stable == GPIO_PIN_RESET) { // blink
-        HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-      } else { // turn off
-        HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-      }
-      last_toggle_ms = current_ms;
-    }
+    app_loop(&st);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
